@@ -1,0 +1,87 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Http\Controllers\Equipo6Controller;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Pruebas UNITARIAS del Equipo 6.
+ * Prueban la lógica del controlador directamente, sin HTTP.
+ *
+ * Cada integrante pega sus pruebas SOLO dentro de su sección (abajo).
+ * No modifiques las secciones de otros integrantes.
+ */
+class Equipo6LogicaTest extends TestCase
+{
+    private Equipo6Controller $controller;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->controller = new Equipo6Controller;
+    }
+
+    // Caso base (líder): todas las unidades aprobadas
+    public function test_materia_con_todas_las_unidades_aprobadas_queda_acreditada(): void
+    {
+        $resultado = $this->controller->evaluar([
+            ['calificacion' => 80.0, 'ponderacion' => 50],
+            ['calificacion' => 90.0, 'ponderacion' => 50],
+        ]);
+
+        $this->assertSame('ACREDITADA', $resultado['estatus']);
+        $this->assertSame(85, $resultado['calificacion_final']);
+        $this->assertSame(85.0, $resultado['promedio_ponderado']);
+        $this->assertSame('Notable', $resultado['nivel_desempeno']);
+        $this->assertSame([], $resultado['unidades_pendientes']);
+    }
+
+    // ==================================================================
+    // INTEGRANTE 1: Kim Du Ri Carrillo Chávez (líder, @KimCarrillo)
+    // Matrícula: 23150326
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 1.
+    // ==================================================================
+
+    // ==================================================================
+    // INTEGRANTE 2: Miguel Ángel Díaz Vera (@miguedv7)
+    // Matrícula: ________
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 2.
+    // ==================================================================
+
+    // ==================================================================
+    // INTEGRANTE 3: Stephanie Madera Sanchez (@fanymadera-sanchez)
+    // Matrícula: ________
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 3.
+    // ==================================================================
+
+    // ==================================================================
+    // INTEGRANTE 4: Gabriel Porto Camarillo (@porto2315)
+    // Matrícula: ________
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 4.
+    // ==================================================================
+
+    // ==================================================================
+    // INTEGRANTE 5: Brenda Buenrostro Valencia (@BrendaBV03)
+    // Matrícula: ________
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 5.
+    // ==================================================================
+
+    // ==================================================================
+    // INTEGRANTE 6: Santiago David Quiroz De León (@santiagodavidquirozdeleon)
+    // Matrícula: ________
+    // Pega tus pruebas debajo de esta línea.
+
+    // Fin de las pruebas del integrante 6.
+    // ==================================================================
+}
