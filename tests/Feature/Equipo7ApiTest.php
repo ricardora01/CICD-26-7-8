@@ -79,6 +79,31 @@ class Equipo7ApiTest extends TestCase
             ->assertJsonPath('resumen.limite_creditos.maximo', 24);
     }
 
+    // 22151184
+    public function test_endpoint_rechaza_clave_con_html_y_metodo_get_no_permitido(): void
+    {
+        $payload = [
+            'estatus_alumno' => 'regular',
+            'materias' => [
+                [
+                    'clave' => '<script>alert(1)</script>',
+                    'creditos' => 6,
+                    'tipo' => 'obligatoria',
+                    'horarios' => [
+                        ['dia' => 'lunes', 'hora_inicio' => '08:00', 'hora_fin' => '10:00'],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->postJson('/api/equipo-7/validar-horario', $payload)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['materias.0.clave']);
+
+        $this->getJson('/api/equipo-7/validar-horario')
+            ->assertStatus(405);
+    }
+
     // 22151231
     public function test_endpoint_rechaza_carga_sin_materia_obligatoria_y_exceso_de_optativas(): void
     {
