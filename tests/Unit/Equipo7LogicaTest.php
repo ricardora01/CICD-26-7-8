@@ -14,7 +14,8 @@ class Equipo7LogicaTest extends TestCase
         parent::setUp();
         $this->service = new Equipo7HorarioService;
     }
-    //22151137
+
+    // 22151137
     public function test_aprueba_carga_valida_sin_traslapes(): void
     {
         $materias = [
@@ -47,7 +48,7 @@ class Equipo7LogicaTest extends TestCase
         $this->assertEquals(8.0, $resultado['resumen']['horas_semanales']);
     }
 
-    //22151201
+    // 22151201
 
     public function test_permite_clases_consecutivas_y_limites_exactos_de_horario_y_duracion(): void
     {
@@ -78,7 +79,8 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame([], $resultado['errores_reglas']);
         $this->assertEquals(0.0, $resultado['resumen']['horas_muertas_totales']);
     }
-    //22151231
+
+    // 22151231
     public function test_detecta_traslape_entre_dos_materias_el_mismo_dia(): void
     {
         $materias = [
