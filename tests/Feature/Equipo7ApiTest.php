@@ -6,6 +6,8 @@ use Tests\TestCase;
 
 class Equipo7ApiTest extends TestCase
 {
+
+    //22151137
     public function test_endpoint_valida_horario_correcto_y_retorna_estructura_json(): void
     {
         $payload = [
@@ -51,7 +53,33 @@ class Equipo7ApiTest extends TestCase
             ->assertJsonPath('equipo', 7)
             ->assertJsonPath('estatus', 'APROBADO');
     }
+//22151201
+    public function test_endpoint_acepta_limite_minimo_de_creditos_para_alumno_irregular(): void
+        {
+            $payload = [
+                'estatus_alumno' => 'irregular',
+                'materias' => [
+                    [
+                        'clave' => 'ISC-403',
+                        'creditos' => 8,
+                        'tipo' => 'obligatoria',
+                        'horarios' => [
+                            ['dia' => 'viernes', 'hora_inicio' => '08:00', 'hora_fin' => '10:00'],
+                        ],
+                    ],
+                ],
+            ];
 
+            $response = $this->postJson('/api/equipo-7/validar-horario', $payload);
+
+            $response->assertStatus(200)
+                ->assertJsonPath('estatus', 'APROBADO')
+                ->assertJsonPath('resumen.creditos_totales', 8)
+                ->assertJsonPath('resumen.limite_creditos.minimo', 8)
+                ->assertJsonPath('resumen.limite_creditos.maximo', 24);
+        }   
+
+    //22151231
     public function test_endpoint_rechaza_carga_sin_materia_obligatoria_y_exceso_de_optativas(): void
     {
         $payload = [
