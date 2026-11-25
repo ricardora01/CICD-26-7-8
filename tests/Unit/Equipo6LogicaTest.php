@@ -47,8 +47,16 @@ class Equipo6LogicaTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 2: Miguel Ángel Díaz Vera (@miguedv7)
-    // Matrícula: ________
+    // Matrícula: 23150309
     // Pega tus pruebas debajo de esta línea.
+
+    // [Límite] Frontera entre Notable y Excelente
+    public function test_nivel_cambia_de_notable_a_excelente_en_95(): void
+    {
+        $this->assertSame('Notable', $this->controller->nivelDesempeno(94));
+        $this->assertSame('Excelente', $this->controller->nivelDesempeno(95));
+        $this->assertSame('Excelente', $this->controller->nivelDesempeno(100));
+    }
 
     // Fin de las pruebas del integrante 2.
     // ==================================================================
