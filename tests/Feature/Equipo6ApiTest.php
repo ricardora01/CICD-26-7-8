@@ -84,8 +84,57 @@ class Equipo6ApiTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 6: Santiago David Quiroz De León (@santiagodavidquirozdeleon)
-    // Matrícula: ________
+    // Matrícula: 23150356
     // Pega tus pruebas debajo de esta línea.
+    // [Válido] Materia opcional y con acentos
+    public function test_materia_es_opcional_y_acepta_acentos(): void
+    {
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => [['calificacion' => 90, 'ponderacion' => 100]],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.materia', null);
+
+        $this->postJson(self::ENDPOINT, [
+            'materia' => 'Programación Web',
+            'unidades' => [['calificacion' => 90, 'ponderacion' => 100]],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.materia', 'Programación Web');
+    }
+
+    // [Inválido] Materia muy corta, muy larga o que no es texto
+    public function test_materia_con_longitud_o_tipo_incorrecto_es_rechazada(): void
+    {
+        foreach (['ab', str_repeat('a', 101), 12345] as $materia) {
+            $this->postJson(self::ENDPOINT, [
+                'materia' => $materia,
+                'unidades' => [['calificacion' => 80, 'ponderacion' => 100]],
+            ])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors(['materia']);
+        }
+    }
+
+    // [Abuso] JSON malformado no expone información interna
+    public function test_json_malformado_no_expone_informacion_interna(): void
+    {
+        $response = $this->call(
+            'POST',
+            self::ENDPOINT,
+            [],
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
+            '{"unidades": [ {"calificacion": 80,'
+        );
+
+        $response->assertStatus(422)->assertJsonPath('success', false);
+
+        foreach (['trace', 'exception', 'vendor', 'Stack'] as $palabra) {
+            $this->assertStringNotContainsString($palabra, $response->getContent());
+        }
+    }
 
     // Fin de las pruebas del integrante 6.
     // ==================================================================
