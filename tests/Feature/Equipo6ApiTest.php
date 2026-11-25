@@ -52,9 +52,53 @@ class Equipo6ApiTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 2: Miguel Ángel Díaz Vera (@miguedv7)
-    // Matrícula: ________
+    // Matrícula: 23150309
     // Pega tus pruebas debajo de esta línea.
+    // [Válido] Tres unidades aprobadas con su aporte
+    public function test_tres_unidades_aprobadas_calculan_aporte_y_nivel(): void
+    {
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => [
+                ['calificacion' => 80, 'ponderacion' => 30],
+                ['calificacion' => 75, 'ponderacion' => 30],
+                ['calificacion' => 82, 'ponderacion' => 40],
+            ],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.estatus', 'ACREDITADA')
+            ->assertJsonPath('data.promedio_ponderado', 79.3)
+            ->assertJsonPath('data.calificacion_final', 79)
+            ->assertJsonPath('data.nivel_desempeno', 'Bueno')
+            ->assertJsonPath('data.detalle.0.aporte', 24)
+            ->assertJsonPath('data.detalle.1.aporte', 22.5)
+            ->assertJsonPath('data.detalle.2.aporte', 32.8);
+    }
 
+    // [Inválido] Calificaciones fuera de 0 a 100
+    public function test_calificaciones_fuera_de_rango_son_rechazadas(): void
+    {
+        foreach ([-1, 101] as $calificacion) {
+            $this->postJson(self::ENDPOINT, [
+                'unidades' => [['calificacion' => $calificacion, 'ponderacion' => 100]],
+            ])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors(['unidades.0.calificacion' => 'La calificación debe estar entre 0 y 100.']);
+        }
+    }
+
+    // [Abuso] Ponderaciones que no suman 100
+    public function test_ponderaciones_que_suman_99_son_rechazadas(): void
+    {
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => [
+                ['calificacion' => 80, 'ponderacion' => 50],
+                ['calificacion' => 80, 'ponderacion' => 49],
+            ],
+        ])
+            ->assertStatus(422)
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('errors.unidades.0', 'La suma de las ponderaciones debe ser exactamente 100. Suma recibida: 99.');
+    }
     // Fin de las pruebas del integrante 2.
     // ==================================================================
 
