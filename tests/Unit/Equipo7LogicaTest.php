@@ -109,4 +109,33 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame(30, $resultado['conflictos_horario'][0]['minutos_traslape']);
         $this->assertSame('martes', $resultado['conflictos_horario'][0]['dia']);
     }
+
+    // 22151184
+    public function test_genera_observacion_por_exceso_de_horas_muertas_semanales(): void
+    {
+        $materias = [
+            [
+                'clave' => 'ISC-501',
+                'creditos' => 6,
+                'tipo' => 'obligatoria',
+                'horarios' => [
+                    ['dia' => 'lunes', 'hora_inicio' => '07:00', 'hora_fin' => '09:00'],
+                ],
+            ],
+            [
+                'clave' => 'ISC-502',
+                'creditos' => 6,
+                'tipo' => 'obligatoria',
+                'horarios' => [
+                    ['dia' => 'lunes', 'hora_inicio' => '13:00', 'hora_fin' => '15:00'],
+                ],
+            ],
+        ];
+
+        $resultado = $this->service->evaluar('regular', $materias);
+
+        $this->assertSame('APROBADO_CON_OBSERVACIONES', $resultado['estatus']);
+        $this->assertEquals(4.0, $resultado['resumen']['horas_muertas_totales']);
+        $this->assertNotEmpty($resultado['observaciones']);
+    }
 }
