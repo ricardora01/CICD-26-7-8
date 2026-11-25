@@ -87,8 +87,18 @@ class Equipo6LogicaTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 6: Santiago David Quiroz De León (@santiagodavidquirozdeleon)
-    // Matrícula: ________
+    // Matrícula: 23150356
     // Pega tus pruebas debajo de esta línea.
+    // [Límite] Fronteras de Suficiente, Bueno y Notable
+    public function test_fronteras_de_suficiente_bueno_y_notable(): void
+    {
+        $this->assertSame('Suficiente', $this->controller->nivelDesempeno(70));
+        $this->assertSame('Suficiente', $this->controller->nivelDesempeno(74));
+        $this->assertSame('Bueno', $this->controller->nivelDesempeno(75));
+        $this->assertSame('Bueno', $this->controller->nivelDesempeno(84));
+        $this->assertSame('Notable', $this->controller->nivelDesempeno(85));
+        $this->assertSame('Desempeño insuficiente', $this->controller->nivelDesempeno(null));
+    }
 
     // Fin de las pruebas del integrante 6.
     // ==================================================================
