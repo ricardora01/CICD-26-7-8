@@ -106,4 +106,64 @@ class Equipo5ApiTest extends TestCase
                 'integrantes_familia',
             ]);
     }
+
+    public function test_api_devuelve_beca_completa(): void
+    {
+        $response = $this->postJson(
+            self::ENDPOINT,
+            [
+                'promedio' => 98,
+                'ingreso_familiar' => 6000,
+                'integrantes_familia' => 4,
+                'asistencia' => 95,
+                'materias_reprobadas' => 0,
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('data.elegible', true)
+            ->assertJsonPath('data.tipo_beca', 'completa')
+            ->assertJsonPath('data.monto_mensual', 3000);
+    }
+
+    public function test_api_devuelve_beca_parcial(): void
+    {
+        $response = $this->postJson(
+            self::ENDPOINT,
+            [
+                'promedio' => 92,
+                'ingreso_familiar' => 10500,
+                'integrantes_familia' => 3,
+                'asistencia' => 95,
+                'materias_reprobadas' => 0,
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('data.elegible', true)
+            ->assertJsonPath('data.tipo_beca', 'parcial')
+            ->assertJsonPath('data.monto_mensual', 2000);
+    }
+
+    public function test_api_devuelve_beca_basica(): void
+    {
+        $response = $this->postJson(
+            self::ENDPOINT,
+            [
+                'promedio' => 85,
+                'ingreso_familiar' => 12000,
+                'integrantes_familia' => 3,
+                'asistencia' => 90,
+                'materias_reprobadas' => 0,
+            ]
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('data.elegible', true)
+            ->assertJsonPath('data.tipo_beca', 'basica')
+            ->assertJsonPath('data.monto_mensual', 1000);
+    }
 }
