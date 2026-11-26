@@ -43,6 +43,55 @@ class Equipo5LogicaTest extends TestCase
         $this->assertIsArray($resultado['motivos']);
     }
 
+    public function test_calcula_ingreso_por_persona(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            92,
+            12000,
+            4,
+            90,
+            0
+        );
+
+        $this->assertSame(
+            3000.0,
+            $resultado['ingreso_por_persona']
+        );
+    }
+
+    public function test_redondea_ingreso_por_persona(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            92,
+            10000,
+            3,
+            90,
+            0
+        );
+
+        $this->assertSame(
+            3333.33,
+            $resultado['ingreso_por_persona']
+        );
+    }
+
+    public function test_rechaza_division_entre_cero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->expectExceptionMessage(
+            'Los datos proporcionados no son válidos.'
+        );
+
+        $this->servicio->evaluar(
+            98,
+            6000,
+            0,
+            95,
+            0
+        );
+    }
+
     public function test_rechaza_beca_por_promedio_insuficiente(): void
     {
         $resultado = $this->servicio->evaluar(

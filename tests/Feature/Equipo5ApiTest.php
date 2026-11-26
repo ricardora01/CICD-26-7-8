@@ -46,6 +46,67 @@ class Equipo5ApiTest extends TestCase
             ]);
     }
 
+    public function test_api_calcula_ingreso_por_persona(): void
+    {
+        $datos = $this->datosValidos();
+
+        $datos['ingreso_familiar'] = 12000;
+        $datos['integrantes_familia'] = 4;
+
+        $response = $this->postJson(
+            self::ENDPOINT,
+            $datos
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath(
+                'data.ingreso_por_persona',
+                3000
+            );
+    }
+
+    public function test_api_redondea_ingreso_por_persona(): void
+    {
+        $datos = $this->datosValidos();
+
+        $datos['ingreso_familiar'] = 10000;
+        $datos['integrantes_familia'] = 3;
+
+        $response = $this->postJson(
+            self::ENDPOINT,
+            $datos
+        );
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath(
+                'data.ingreso_por_persona',
+                3333.33
+            );
+    }
+
+    public function test_api_rechaza_cero_integrantes(): void
+    {
+        $datos = $this->datosValidos();
+
+        $datos['integrantes_familia'] = 0;
+
+        $response = $this->postJson(
+            self::ENDPOINT,
+            $datos
+        );
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonPath('success', false)
+            ->assertJsonValidationErrors([
+                'integrantes_familia',
+            ]);
+    }
+
     public function test_la_api_rechaza_beca_por_asistencia_insuficiente(): void
     {
         $datos = $this->datosValidos();
