@@ -120,8 +120,48 @@ class Equipo6ApiTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 5: Brenda Buenrostro Valencia (@BrendaBV03)
-    // Matrícula: ________
+    // Matrícula: 23150310
     // Pega tus pruebas debajo de esta línea.
+
+    // [Límite] Calificaciones extremas 0 y 100
+    public function test_calificaciones_extremas_0_y_100(): void
+    {
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => [['calificacion' => 100, 'ponderacion' => 100]],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.calificacion_final', 100)
+            ->assertJsonPath('data.nivel_desempeno', 'Excelente');
+
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => [['calificacion' => 0, 'ponderacion' => 100]],
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.estatus', 'NO ACREDITADA')
+            ->assertJsonPath('data.detalle.0.puntos_faltantes', 70);
+    }
+
+    // [Inválido] Ponderación 0 o mayor a 100
+    public function test_ponderacion_cero_o_mayor_a_100_es_rechazada(): void
+    {
+        foreach ([0, 101] as $ponderacion) {
+            $this->postJson(self::ENDPOINT, [
+                'unidades' => [['calificacion' => 80, 'ponderacion' => $ponderacion]],
+            ])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors(['unidades.0.ponderacion' => 'La ponderación debe estar entre 1 y 100.']);
+        }
+    }
+
+    // [Abuso] Objeto en lugar de lista
+    public function test_unidades_como_objeto_en_lugar_de_lista_son_rechazadas(): void
+    {
+        $this->postJson(self::ENDPOINT, [
+            'unidades' => ['primera' => ['calificacion' => 80, 'ponderacion' => 100]],
+        ])
+            ->assertStatus(422)
+            ->assertJsonPath('errors.unidades.0', 'Las unidades deben enviarse como una lista, no como un objeto.');
+    }
 
     // Fin de las pruebas del integrante 5.
     // ==================================================================
