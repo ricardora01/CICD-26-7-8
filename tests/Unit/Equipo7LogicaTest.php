@@ -46,4 +46,11 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame([], $resultado['errores_reglas']);
         $this->assertEquals(8.0, $resultado['resumen']['horas_semanales']);
     }
+
+    public function test_hora_a_minutos_lanza_excepcion_con_formato_invalido(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->service->horaAMinutos('25:99');
+    }
 }
