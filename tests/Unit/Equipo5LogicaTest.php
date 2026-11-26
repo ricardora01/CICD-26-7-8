@@ -91,4 +91,49 @@ class Equipo5LogicaTest extends TestCase
             0
         );
     }
+
+    public function test_clasifica_beca_completa(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            98,
+            6000,
+            4,
+            95,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('completa', $resultado['tipo_beca']);
+        $this->assertSame(3000, $resultado['monto_mensual']);
+    }
+
+    public function test_clasifica_beca_parcial(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            92,
+            10500,
+            3,
+            95,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('parcial', $resultado['tipo_beca']);
+        $this->assertSame(2000, $resultado['monto_mensual']);
+    }
+
+    public function test_clasifica_beca_basica(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            85,
+            12000,
+            3,
+            90,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('basica', $resultado['tipo_beca']);
+        $this->assertSame(1000, $resultado['monto_mensual']);
+    }
 }
