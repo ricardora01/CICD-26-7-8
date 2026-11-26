@@ -144,6 +144,6 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame('APROBADO_CON_OBSERVACIONES', $resultado['estatus']);
         $this->assertEquals(4.0, $resultado['resumen']['horas_muertas_totales']);
         $this->assertNotEmpty($resultado['observaciones']);
-    $this->assertNotEmpty($resultado['observaciones']);
+        $this->assertNotEmpty($resultado['observaciones']);
     }
 }
