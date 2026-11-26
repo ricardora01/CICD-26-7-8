@@ -44,5 +44,4 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame(30, $resultado['conflictos_horario'][0]['minutos_traslape']);
         $this->assertSame('martes', $resultado['conflictos_horario'][0]['dia']);
     }
-
 }

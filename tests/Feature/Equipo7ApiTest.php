@@ -6,7 +6,6 @@ use Tests\TestCase;
 
 class Equipo7ApiTest extends TestCase
 {
-
     // 22151231
     public function test_endpoint_rechaza_carga_sin_materia_obligatoria_y_exceso_de_optativas(): void
     {
