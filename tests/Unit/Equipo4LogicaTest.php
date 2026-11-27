@@ -49,4 +49,11 @@ class Equipo4LogicaTest extends TestCase
     // === SECCION INTEGRANTE 5 (23150364) ===
 
     // === SECCION INTEGRANTE 6 (23150357) ===
+    public function test_alumno_con_adeudo_se_bloquea_aunque_tenga_asistencia_perfecta(): void
+    {
+        $this->assertSame(
+            'El alumno tiene un adeudo pendiente.',
+            $this->controller->verificarBloqueos(true, 100.0, 0)
+        );
+    }
 }

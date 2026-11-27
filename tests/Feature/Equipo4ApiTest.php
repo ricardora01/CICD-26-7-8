@@ -98,4 +98,30 @@ class Equipo4ApiTest extends TestCase
     // === SECCION INTEGRANTE 5 (23150364) ===
 
     // === SECCION INTEGRANTE 6 (23150357) ===
+    public function test_alumno_con_adeudo_no_es_autorizado_aunque_tenga_promedio_perfecto(): void
+    {
+        $this->postJson(
+            $this->endpoint,
+            $this->payloadValido([
+                'promedio_anterior' => 100.0,
+                'tiene_adeudo' => true,
+            ])
+        )
+            ->assertOk()
+            ->assertJsonPath('autorizado', false);
+    }
+
+    public function test_promedio_no_numerico_devuelve_422_con_error_sin_detalles_internos(): void
+    {
+        $this->postJson(
+            $this->endpoint,
+            $this->payloadValido([
+                'promedio_anterior' => 'promedio-no-numerico',
+            ])
+        )
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['promedio_anterior'])
+            ->assertJsonMissingPath('exception')
+            ->assertJsonMissingPath('trace');
+    }
 }
