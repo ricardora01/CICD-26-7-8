@@ -136,4 +136,62 @@ class Equipo5LogicaTest extends TestCase
         $this->assertSame('basica', $resultado['tipo_beca']);
         $this->assertSame(1000, $resultado['monto_mensual']);
     }
+
+    public function test_rechaza_beca_por_promedio_insuficiente(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            75,
+            6000,
+            4,
+            95,
+            0
+        );
+
+        $this->assertFalse($resultado['elegible']);
+        $this->assertSame('rechazada', $resultado['tipo_beca']);
+        $this->assertSame(0, $resultado['monto_mensual']);
+        $this->assertSame([
+            'El promedio es inferior a 80.',
+        ], $resultado['motivos']);
+    }
+
+    public function test_rechaza_beca_por_materias_reprobadas(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            98,
+            6000,
+            4,
+            95,
+            2
+        );
+
+        $this->assertFalse($resultado['elegible']);
+        $this->assertSame('rechazada', $resultado['tipo_beca']);
+        $this->assertSame(0, $resultado['monto_mensual']);
+        $this->assertSame([
+            'El estudiante tiene materias reprobadas.',
+        ], $resultado['motivos']);
+    }
+
+    public function test_acumula_todos_los_motivos_de_inelegibilidad(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            70,
+            24000,
+            4,
+            75,
+            2
+        );
+
+        $this->assertFalse($resultado['elegible']);
+        $this->assertSame('rechazada', $resultado['tipo_beca']);
+        $this->assertSame(0, $resultado['monto_mensual']);
+        $this->assertCount(4, $resultado['motivos']);
+        $this->assertSame([
+            'El promedio es inferior a 80.',
+            'La asistencia es inferior al 85%.',
+            'El estudiante tiene materias reprobadas.',
+            'El ingreso por persona supera el límite permitido.',
+        ], $resultado['motivos']);
+    }
 }
