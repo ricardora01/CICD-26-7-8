@@ -12,3 +12,7 @@ Route::get('/generate-password', [
     OperationsController::class,
     'generate',
 ]);
+Route::post('/equipo-2/evaluar-espacio', [
+    OperationsController::class,
+    'evaluarEspacio',
+])->middleware('throttle:30,1');
