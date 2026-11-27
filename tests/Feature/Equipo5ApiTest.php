@@ -237,4 +237,62 @@ class Equipo5ApiTest extends TestCase
                 'El ingreso por persona supera el límite permitido.',
             ]);
     }
+
+    public function test_limite_api_rechaza_promedio_justo_inferior(): void
+    {
+        $datos = $this->datosValidos();
+        $datos['promedio'] = 79.99;
+
+        $response = $this->postJson(self::ENDPOINT, $datos);
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.elegible', false)
+            ->assertJsonPath('data.tipo_beca', 'rechazada')
+            ->assertJsonPath('data.monto_mensual', 0)
+            ->assertJsonPath('data.ingreso_por_persona', 1500)
+            ->assertJsonPath('data.motivos', [
+                'El promedio es inferior a 80.',
+            ]);
+    }
+
+    public function test_limite_api_rechaza_asistencia_justo_inferior(): void
+    {
+        $datos = $this->datosValidos();
+        $datos['asistencia'] = 84.99;
+
+        $response = $this->postJson(self::ENDPOINT, $datos);
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.elegible', false)
+            ->assertJsonPath('data.tipo_beca', 'rechazada')
+            ->assertJsonPath('data.monto_mensual', 0)
+            ->assertJsonPath('data.ingreso_por_persona', 1500)
+            ->assertJsonPath('data.motivos', [
+                'La asistencia es inferior al 85%.',
+            ]);
+    }
+
+    public function test_limite_api_rechaza_ingreso_justo_superior(): void
+    {
+        $datos = $this->datosValidos();
+        $datos['ingreso_familiar'] = 5000.01;
+        $datos['integrantes_familia'] = 1;
+
+        $response = $this->postJson(self::ENDPOINT, $datos);
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.elegible', false)
+            ->assertJsonPath('data.tipo_beca', 'rechazada')
+            ->assertJsonPath('data.monto_mensual', 0)
+            ->assertJsonPath('data.ingreso_por_persona', 5000.01)
+            ->assertJsonPath('data.motivos', [
+                'El ingreso por persona supera el límite permitido.',
+            ]);
+    }
 }

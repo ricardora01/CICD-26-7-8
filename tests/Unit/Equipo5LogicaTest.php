@@ -194,4 +194,55 @@ class Equipo5LogicaTest extends TestCase
             'El ingreso por persona supera el límite permitido.',
         ], $resultado['motivos']);
     }
+
+    public function test_limite_exacto_para_beca_basica(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            80,
+            5000,
+            1,
+            85,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('basica', $resultado['tipo_beca']);
+        $this->assertSame(1000, $resultado['monto_mensual']);
+        $this->assertSame(5000.0, $resultado['ingreso_por_persona']);
+        $this->assertSame([], $resultado['motivos']);
+    }
+
+    public function test_limite_exacto_para_beca_parcial(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            90,
+            7000,
+            2,
+            85,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('parcial', $resultado['tipo_beca']);
+        $this->assertSame(2000, $resultado['monto_mensual']);
+        $this->assertSame(3500.0, $resultado['ingreso_por_persona']);
+        $this->assertSame([], $resultado['motivos']);
+    }
+
+    public function test_limite_exacto_para_beca_completa(): void
+    {
+        $resultado = $this->servicio->evaluar(
+            95,
+            4000,
+            2,
+            85,
+            0
+        );
+
+        $this->assertTrue($resultado['elegible']);
+        $this->assertSame('completa', $resultado['tipo_beca']);
+        $this->assertSame(3000, $resultado['monto_mensual']);
+        $this->assertSame(2000.0, $resultado['ingreso_por_persona']);
+        $this->assertSame([], $resultado['motivos']);
+    }
 }
