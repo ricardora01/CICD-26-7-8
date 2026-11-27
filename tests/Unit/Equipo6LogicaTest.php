@@ -79,8 +79,25 @@ class Equipo6LogicaTest extends TestCase
 
     // ==================================================================
     // INTEGRANTE 5: Brenda Buenrostro Valencia (@BrendaBV03)
-    // Matrícula: ________
+    // Matrícula: 23150310
     // Pega tus pruebas debajo de esta línea.
+
+    // [Válido] Conteo de unidades y suma de ponderaciones
+    public function test_suma_ponderaciones_y_conteo_de_unidades_acreditadas(): void
+    {
+        $unidades = [
+            ['calificacion' => 90.0, 'ponderacion' => 20],
+            ['calificacion' => 50.0, 'ponderacion' => 30],
+            ['calificacion' => 80.0, 'ponderacion' => 50],
+        ];
+
+        $resultado = $this->controller->evaluar($unidades);
+
+        $this->assertSame(100, $this->controller->sumaPonderaciones($unidades));
+        $this->assertSame(3, $resultado['total_unidades']);
+        $this->assertSame(2, $resultado['unidades_acreditadas']);
+        $this->assertSame([2], $resultado['unidades_pendientes']);
+    }
 
     // Fin de las pruebas del integrante 5.
     // ==================================================================
