@@ -138,7 +138,7 @@ class Equipo7ApiTest extends TestCase
         $this->assertNotEmpty($response->json('errores_reglas'));
     }
 
-    //22151231
+    // 22151231
     public function test_endpoint_rechaza_campos_adicionales_con_http_422(): void
     {
         $payload = [

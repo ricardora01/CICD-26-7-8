@@ -138,7 +138,7 @@ class Equipo7LogicaTest extends TestCase
         $this->assertNotEmpty($resultado['observaciones']);
     }
 
-    //22151231
+    // 22151231
     public function test_hora_a_minutos_lanza_excepcion_con_formato_invalido(): void
     {
         $this->expectException(\InvalidArgumentException::class);
