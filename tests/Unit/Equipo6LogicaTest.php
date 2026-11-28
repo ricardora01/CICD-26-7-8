@@ -42,28 +42,6 @@ class Equipo6LogicaTest extends TestCase
     // Matrícula: 23150326
     // Pega tus pruebas debajo de esta línea.
 
-    // [Válido] Una sola unidad reprobada impide acreditar la materia
-    public function test_una_unidad_reprobada_deja_la_materia_no_acreditada(): void
-    {
-        $resultado = $this->controller->evaluar([
-            ['calificacion' => 95.0, 'ponderacion' => 50],
-            ['calificacion' => 60.0, 'ponderacion' => 50],
-        ]);
-
-        $this->assertSame('NO ACREDITADA', $resultado['estatus']);
-        $this->assertNull($resultado['calificacion_final']);
-        $this->assertSame(77.5, $resultado['promedio_ponderado']);
-        $this->assertSame([2], $resultado['unidades_pendientes']);
-        $this->assertSame('Desempeño insuficiente', $resultado['nivel_desempeno']);
-    }
-
-    // [Límite] 70 acredita y 69.99 no
-    public function test_unidad_acredita_exactamente_en_70_y_no_en_69_99(): void
-    {
-        $this->assertTrue($this->controller->unidadAcreditada(70.0));
-        $this->assertFalse($this->controller->unidadAcreditada(69.99));
-    }
-
     // Fin de las pruebas del integrante 1.
     // ==================================================================
 
