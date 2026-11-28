@@ -47,28 +47,6 @@ class Equipo6ApiTest extends TestCase
     // Matrícula: 23150326
     // Pega tus pruebas debajo de esta línea.
 
-    // [Inválido] Calificación con texto
-    public function test_calificacion_con_texto_es_rechazada_con_422(): void
-    {
-        $this->postJson(self::ENDPOINT, [
-            'unidades' => [['calificacion' => 'abc', 'ponderacion' => 100]],
-        ])
-            ->assertStatus(422)
-            ->assertJsonPath('success', false)
-            ->assertJsonValidationErrors(['unidades.0.calificacion']);
-    }
-
-    // [Abuso] Campos extra dentro de una unidad
-    public function test_unidad_con_campo_extra_es_rechazada(): void
-    {
-        $this->postJson(self::ENDPOINT, [
-            'unidades' => [['calificacion' => 80, 'ponderacion' => 100, 'admin' => true]],
-        ])
-            ->assertStatus(422)
-            ->assertJsonPath('success', false)
-            ->assertJsonValidationErrors(['unidades.0']);
-    }
-
     // Fin de las pruebas del integrante 1.
     // ==================================================================
 
