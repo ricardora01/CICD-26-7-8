@@ -104,7 +104,6 @@ class Equipo7ApiTest extends TestCase
             ->assertStatus(405);
     }
 
-    // 22151231
     public function test_endpoint_rechaza_carga_sin_materia_obligatoria_y_exceso_de_optativas(): void
     {
         $payload = [
@@ -137,5 +136,29 @@ class Equipo7ApiTest extends TestCase
             ->assertJsonPath('estatus', 'RECHAZADO');
 
         $this->assertNotEmpty($response->json('errores_reglas'));
+    }
+
+    // 22151231
+    public function test_endpoint_rechaza_campos_adicionales_con_http_422(): void
+    {
+        $payload = [
+            'estatus_alumno' => 'regular',
+            'campo_extra_malicioso' => '<script>alert(1)</script>',
+            'materias' => [
+                [
+                    'clave' => 'ISC-301',
+                    'creditos' => 6,
+                    'tipo' => 'obligatoria',
+                    'horarios' => [
+                        ['dia' => 'lunes', 'hora_inicio' => '08:00', 'hora_fin' => '10:00'],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->postJson('/api/equipo-7/validar-horario', $payload);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['payload']);
     }
 }

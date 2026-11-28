@@ -80,7 +80,6 @@ class Equipo7LogicaTest extends TestCase
         $this->assertEquals(0.0, $resultado['resumen']['horas_muertas_totales']);
     }
 
-    // 22151231
     public function test_detecta_traslape_entre_dos_materias_el_mismo_dia(): void
     {
         $materias = [
@@ -137,5 +136,13 @@ class Equipo7LogicaTest extends TestCase
         $this->assertSame('APROBADO_CON_OBSERVACIONES', $resultado['estatus']);
         $this->assertEquals(4.0, $resultado['resumen']['horas_muertas_totales']);
         $this->assertNotEmpty($resultado['observaciones']);
+    }
+
+    // 22151231
+    public function test_hora_a_minutos_lanza_excepcion_con_formato_invalido(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->service->horaAMinutos('25:99');
     }
 }
