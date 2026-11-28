@@ -46,7 +46,7 @@ class Equipo4LogicaTest extends TestCase
     {
         $this->assertSame(42, $this->controller->calcularCargaMaxima(94.0, 0));
     }
-
+ 
     public function test_alumno_con_beca_conserva_el_beneficio_si_cumple_los_requisitos(): void
     {
         $this->assertTrue($this->controller->evaluarConservacionBeca(true, 92.0, 0, 95.0));
