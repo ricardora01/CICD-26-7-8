@@ -46,6 +46,10 @@ class Equipo3Controller extends Controller
     }
 
     // --- MÓDULO 1: CONEXIONES Y TIEMPOS ---
+
+    /**
+     * @param  array<int, array<string, mixed>>  $segments
+     */
     private function validarConexiones(array $segments): void
     {
         for ($i = 1; $i < count($segments); $i++) {
@@ -78,6 +82,11 @@ class Equipo3Controller extends Controller
     }
 
     // --- MÓDULO 2: EQUIPAJE Y PESO ---
+
+    /**
+     * @param  array<int, array<string, mixed>>  $baggage
+     * @return array{cost: float, breakdown: list<array<string, mixed>>}
+     */
     private function calcularEquipaje(array $baggage, string $passengerClass): array
     {
         $baggageCost = 0.00;
@@ -114,6 +123,10 @@ class Equipo3Controller extends Controller
     }
 
     // --- MÓDULO 3: FATIGA Y ESCALAS ---
+
+    /**
+     * @param  array<int, array<string, mixed>>  $segments
+     */
     private function calcularFatiga(array $segments): float
     {
         // Más de 2 escalas = 3 o más vuelos
